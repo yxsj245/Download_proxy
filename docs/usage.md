@@ -109,6 +109,29 @@ docker run -d --name download-proxy \
 
 > **注意**：HTTP/3使用UDP协议，需同时映射TCP和UDP端口。
 
+### Docker Compose
+
+```bash
+docker compose up -d
+```
+
+### 优化 QUIC 性能（可选）
+
+quic-go 需要较大的 UDP 缓冲区以获得最佳性能。`net.core.rmem_max` 是全局内核参数，**无法在容器内设置**，需要在**宿主机**上配置：
+
+```bash
+# 临时生效
+sysctl -w net.core.rmem_max=7500000
+sysctl -w net.core.wmem_max=7500000
+
+# 永久生效
+echo "net.core.rmem_max=7500000" >> /etc/sysctl.conf
+echo "net.core.wmem_max=7500000" >> /etc/sysctl.conf
+sysctl -p
+```
+
+> 不配置也不影响功能，仅在高带宽场景下性能略低。
+
 ## 部署建议
 
 ### Linux 服务化 (systemd)
