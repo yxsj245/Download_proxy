@@ -1,0 +1,14 @@
+services:
+  download-proxy:
+    build: .
+    container_name: download-proxy
+    restart: unless-stopped
+    ports:
+      # TCP (HTTP/1.1 + HTTP/2) 和 UDP (HTTP/3 QUIC) 需同时映射
+      - "8443:8443/tcp"
+      - "8443:8443/udp"
+    # 使用正式证书时取消注释以下配置
+    # volumes:
+    #   - /path/to/cert.pem:/certs/cert.pem:ro
+    #   - /path/to/key.pem:/certs/key.pem:ro
+    # command: ["-addr", ":8443", "-cert", "/certs/cert.pem", "-key", "/certs/key.pem"]

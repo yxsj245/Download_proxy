@@ -1,0 +1,23 @@
+# 编译产物
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+download_proxy
+
+# 测试
+*.test
+*.out
+test/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 证书文件
+*.pem
+*.key
+*.crt
