@@ -1,6 +1,7 @@
 services:
   download-proxy:
     build: .
+    image: registry.cn-beijing.aliyuncs.com/xiaozhu245/download_proxy:v1.0
     container_name: download-proxy
     restart: unless-stopped
     ports:
