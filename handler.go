@@ -196,6 +196,7 @@ func (h *ProxyHandler) serveIndex(w http.ResponseWriter, r *http.Request) {
             align-items: center;
             justify-content: center;
             color: #e0e0e0;
+            padding: 2rem 0;
         }
         .container {
             background: rgba(255,255,255,0.05);
@@ -203,7 +204,7 @@ func (h *ProxyHandler) serveIndex(w http.ResponseWriter, r *http.Request) {
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 20px;
             padding: 3rem;
-            max-width: 700px;
+            max-width: 750px;
             width: 90%;
             box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
@@ -224,14 +225,14 @@ func (h *ProxyHandler) serveIndex(w http.ResponseWriter, r *http.Request) {
             font-weight: 600;
             margin-bottom: 1.5rem;
         }
-        .usage {
+        .section {
             background: rgba(0,0,0,0.3);
             border-radius: 12px;
             padding: 1.5rem;
-            margin: 1.5rem 0;
+            margin: 1.2rem 0;
             border: 1px solid rgba(255,255,255,0.05);
         }
-        .usage h3 { color: #a78bfa; margin-bottom: 0.75rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .section h3 { color: #a78bfa; margin-bottom: 0.75rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
         code {
             display: block;
             background: rgba(96,165,250,0.1);
@@ -239,13 +240,33 @@ func (h *ProxyHandler) serveIndex(w http.ResponseWriter, r *http.Request) {
             border-radius: 8px;
             padding: 1rem;
             font-family: 'Fira Code', 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: #60a5fa;
             word-break: break-all;
             margin-top: 0.5rem;
+            line-height: 1.6;
         }
+        code + code { margin-top: 0.75rem; }
         .protocol { color: #94a3b8; font-size: 0.85rem; margin-top: 1rem; }
         .protocol strong { color: #a78bfa; }
+        .step-label {
+            display: inline-block;
+            background: rgba(167,139,250,0.15);
+            color: #a78bfa;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+        .note {
+            color: #94a3b8;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            padding-left: 0.5rem;
+            border-left: 2px solid rgba(167,139,250,0.3);
+        }
+        .features p { margin: 0.3rem 0; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -253,12 +274,31 @@ func (h *ProxyHandler) serveIndex(w http.ResponseWriter, r *http.Request) {
         <h1>⚡ 代理下载服务</h1>
         <span class="badge">HTTP/3 已启用</span>
         <p class="protocol">支持 <strong>HTTP/1.1</strong>、<strong>HTTP/2</strong> 和 <strong>HTTP/3 (QUIC)</strong> 协议</p>
-        <div class="usage">
+
+        <div class="section">
             <h3>📖 使用方式</h3>
             <p>在URL中传入要下载的资源地址：</p>
             <code>` + fmt.Sprintf("https://%s/proxy?url=https://example.com/file.zip", r.Host) + `</code>
         </div>
-        <div class="usage">
+
+        <div class="section">
+            <h3>🐧 Ubuntu 启用 HTTP/3 下载</h3>
+            <p style="color:#94a3b8;font-size:0.85rem;margin-bottom:0.5rem;">系统自带的 curl 不支持 HTTP/3，需安装 snap 版本：</p>
+            <span class="step-label">步骤 1 — 安装</span>
+            <code>snap install curl</code>
+            <span class="step-label">步骤 2 — 设置别名</span>
+            <code>echo "alias curl='/snap/bin/curl'" >> ~/.bashrc<br>source ~/.bashrc</code>
+            <span class="step-label">步骤 3 — 使用 HTTP/3 下载</span>
+            <code>` + fmt.Sprintf(`curl --http3 -O "https://%s/proxy?url=https://example.com/file.zip"`, r.Host) + `</code>
+            <p class="note">如提示证书错误，添加 <b>-k</b> 参数跳过验证</p>
+        </div>
+
+        <div class="section">
+            <h3>🚀 测速示例</h3>
+            <code>` + fmt.Sprintf(`curl --http3 -O "https://%s/proxy?url=https://github.com/yxsj245/Filespeedmeasurement/releases/download/main/test.txt"`, r.Host) + `</code>
+        </div>
+
+        <div class="section features">
             <h3>✨ 功能特性</h3>
             <p>• 流式传输，不占用服务器内存</p>
             <p>• 支持断点续传 (Range请求)</p>
